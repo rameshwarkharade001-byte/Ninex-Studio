@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,
+      maximum-scale=1.0,user-scalable=no">
+
+<meta name="theme-color" content="#08080b">
+
+<title>Ninex Studio</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#08080b;
+  --panel:#101014;
+  --panel2:#17171d;
+  --line:#27272e;
+  --text:#f5f5f5;
+  --muted:#8b8b95;
+  --accent:#8b5cf6;
+  --accent2:#a78bfa;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+}
+
+button{
+  border:0;
+  outline:0;
+  color:inherit;
+  background:none;
+  font:inherit;
+}
+
+.app{
+  width:100%;
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ================= TOP ================= */
+
+.topbar{
+  height:58px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+  background:#0c0c10;
+  border-bottom:1px solid var(--line);
+}
+
+.brand{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.7px;
+}
+
+.brand span{
+  color:var(--accent2);
+}
+
+.top-right{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.top-btn{
+  min-width:38px;
+  height:36px;
+  padding:0 12px;
+  border-radius:9px;
+  background:#19191f;
+  color:#d4d4d8;
+  font-size:12px;
+}
+
+.export{
+  background:var(--accent);
+  color:white;
+  font-weight:700;
+}
+
+/* ================= WORKSPACE ================= */
+
+.workspace{
+  flex:1;
+  min-height:0;
+  display:flex;
+}
+
+/* ================= LEFT TOOLS ================= */
+
+.tools{
+  width:76px;
+  flex-shrink:0;
+  background:#0d0d11;
+  border-right:1px solid var(--line);
+  padding:9px 7px;
+  overflow-y:auto;
+}
+
+.tool{
+  width:60px;
+  height:58px;
+  margin-bottom:6px;
+  border-radius:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.tool-icon{
+  font-size:20px;
+}
+
+.tool.active{
+  background:#211a2e;
+  color:white;
+}
+
+.tool.active .tool-icon{
+  color:var(--accent2);
+}
+
+/* ================= MAIN EDITOR ================= */
+
+.editor{
+  flex:1;
+  min-width:0;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ================= PREVIEW ================= */
+
+.preview-zone{
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:
+    radial-gradient(
+      circle at center,
+      #19191f 0%,
+      #101014 45%,
+      #0c0c0f 100%
+    );
+}
+
+.preview{
+  position:relative;
+  width:min(420px,72%);
+  max-height:100%;
+  aspect-ratio:9/16;
+  background:#000;
+  border-radius:9px;
+  overflow:hidden;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.65);
+}
+
+.preview video{
+  width:100%;
+  height:100%;
+  display:none;
+  object-fit:contain;
+  background:#000;
+}
+
+.preview-image{
+  width:100%;
+  height:100%;
+  display:none;
+  object-fit:contain;
+}
+
+.empty{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:25px;
+}
+
+.empty-logo{
+  width:72px;
+  height:72px;
+  border-radius:21px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#17171d;
+  font-size:31px;
+  margin-bottom:15px;
+}
+
+.empty-title{
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.empty-sub{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+}
+
+.import-main{
+  margin-top:18px;
+  height:40px;
+  padding:0 18px;
+  border-radius:10px;
+  background:var(--accent);
+  font-size:12px;
+  font-weight:700;
+}
+
+/* ================= PLAYBACK ================= */
+
+.controls{
+  height:52px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  background:#0d0d11;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+.control{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.play{
+  width:39px;
+  height:39px;
+  background:var(--accent);
+}
+
+/* ================= TIMELINE ================= */
+
+.timeline{
+  height:235px;
+  flex-shrink:0;
+  background:#0b0b0e;
+  display:flex;
+  flex-direction:column;
+}
+
+.timeline-header{
+  height:42px;
+  flex-shrink:0;
+  padding:0 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+
+.timeline-name{
+  color:#a1a1aa;
+  font-size:11px;
+  font-weight:600;
+}
+
+.time-display{
+  font-family:monospace;
+  font-size:11px;
+  color:#d4d4d8;
+}
+
+.timeline-scroll{
+  flex:1;
+  overflow:auto;
+  padding:14px;
+}
+
+.ruler{
+  height:24px;
+  min-width:850px;
+  margin-left:64px;
+  position:relative;
+  color:#71717a;
+  font-size:9px;
+  white-space:nowrap;
+}
+
+.ruler span{
+  display:inline-block;
+  width:90px;
+}
+
+.track-row{
+  min-width:850px;
+  height:55px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:5px;
+}
+
+.track-label{
+  width:56px;
+  flex-shrink:0;
+  color:#71717a;
+  font-size:9px;
+  font-weight:700;
+}
+
+.track{
+  height:46px;
+  flex:1;
+  position:relative;
+  border-radius:7px;
+  border:1px solid #28282f;
+  background:#15151a;
+  overflow:hidden;
+}
+
+.clip{
+  position:absolute;
+  left:0;
+  top:2px;
+  bottom:2px;
+  width:240px;
+  border-radius:5px;
+  background:#5b21b6;
+  display:flex;
+  align-items:center;
+  padding:0 10px;
+  font-size:10px;
+  font-weight:600;
+}
+
+.audio-track{
+  background:#111713;
+}
+
+.audio-clip{
+  position:absolute;
+  left:0;
+  top:2px;
+  bottom:2px;
+  width:240px;
+  border-radius:5px;
+  background:#166534;
+}
+
+/* ================= RIGHT PANEL ================= */
+
+.inspector{
+  width:285px;
+  flex-shrink:0;
+  background:#0d0d11;
+  border-left:1px solid var(--line);
+  padding:15px;
+  overflow:auto;
+}
+
+.inspector-title{
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+.group{
+  margin-bottom:20px;
+}
+
+.group-title{
+  margin-bottom:9px;
+  color:#71717a;
+  font-size:9px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.setting{
+  height:40px;
+  width:100%;
+  padding:0 11px;
+  margin-bottom:7px;
+  border-radius:8px;
+  border:1px solid #25252b;
+  background:#17171c;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:11px;
+}
+
+.setting-value{
+  color:var(--accent2);
+}
+
+/* ================= FILE ================= */
+
+#mediaInput{
+  display:none;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:850px){
+
+  .inspector{
+    display:none;
+  }
+
+  .tools{
+    width:65px;
+  }
+
+  .tool{
+    width:51px;
+  }
+
+  .preview{
+    width:min(340px,75%);
+  }
+}
+
+@media(max-width:560px){
+
+  .topbar{
+    height:52px;
+    padding:0 9px;
+  }
+
+  .brand{
+    font-size:17px;
+  }
+
+  .top-btn{
+    height:33px;
+    padding:0 9px;
+  }
+
+  .tools{
+    width:57px;
+    padding:7px 5px;
+  }
+
+  .tool{
+    width:47px;
+    height:49px;
+  }
+
+  .tool-icon{
+    font-size:17px;
+  }
+
+  .preview-zone{
+    padding:8px;
+  }
+
+  .preview{
+    width:min(290px,78%);
+  }
+
+  .timeline{
+    height:205px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+
+    <div class="brand">
+      Ninex<span>Studio</span>
+    </div>
+
+    <div class="top-right">
+
+      <button class="top-btn" id="undoBtn">
+        ↶
+      </button>
+
+      <button class="top-btn" id="redoBtn">
+        ↷
+      </button>
+
+      <button class="top-btn export" id="exportBtn">
+        Export
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- WORKSPACE -->
+  <main class="workspace">
+
+
+    <!-- TOOLS -->
+    <aside class="tools">
+
+      <button class="tool active" data-tool="media">
+        <div class="tool-icon">＋</div>
+        <div>Media</div>
+      </button>
+
+      <button class="tool" data-tool="text">
+        <div class="tool-icon">T</div>
+        <div>Text</div>
+      </button>
+
+      <button class="tool" data-tool="audio">
+        <div class="tool-icon">♫</div>
+        <div>Audio</div>
+      </button>
+
+      <button class="tool" data-tool="effects">
+        <div class="tool-icon">✦</div>
+        <div>Effects</div>
+      </button>
+
+      <button class="tool" data-tool="filters">
+        <div class="tool-icon">◐</div>
+        <div>Filters</div>
+      </button>
+
+      <button class="tool" data-tool="transition">
+        <div class="tool-icon">◈</div>
+        <div>Trans.</div>
+      </button>
+
+      <button class="tool" data-tool="speed">
+        <div class="tool-icon">⚡</div>
+        <div>Speed</div>
+      </button>
+
+      <button class="tool" data-tool="crop">
+        <div class="tool-icon">⌗</div>
+        <div>Crop</div>
+      </button>
+
+    </aside>
+
+
+    <!-- EDITOR -->
+    <section class="editor">
+
+
+      <!-- PREVIEW -->
+      <div class="preview-zone">
+
+        <div class="preview">
+
+          <video
+            id="videoPlayer"
+            playsinline
+            preload="metadata">
+          </video>
+
+          <img
+            id="imagePreview"
+            class="preview-image">
+
+          <div
+            class="empty"
+            id="emptyState">
+
+            <div class="empty-logo">
+              🎬
+            </div>
+
+            <div class="empty-title">
+              Start your project
+            </div>
+
+            <div class="empty-sub">
+              Import a video or photo<br>
+              and start editing
+            </div>
+
+            <button
+              class="import-main"
+              id="importButton">
+              Import Media
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONTROLS -->
+      <div class="controls">
+
+        <button
+          class="control"
+          id="previousBtn">
+          ◀◀
+        </button>
+
+        <button
+          class="control play"
+          id="playButton">
+          ▶
+        </button>
+
+        <button
+          class="control"
+          id="nextBtn">
+          ▶▶
+        </button>
+
+      </div>
+
+
+      <!-- TIMELINE -->
+      <section class="timeline">
+
+        <div class="timeline-header">
+
+          <div class="timeline-name">
+            TIMELINE
+          </div>
+
+          <div
+            class="time-display"
+            id="timeDisplay">
+            00:00 / 00:00
+          </div>
+
+        </div>
+
+
+        <div class="timeline-scroll">
+
+          <div class="ruler">
+
+            <span>00:00</span>
+            <span>00:05</span>
+            <span>00:10</span>
+            <span>00:15</span>
+            <span>00:20</span>
+            <span>00:25</span>
+            <span>00:30</span>
+
+          </div>
+
+
+          <div class="track-row">
+
+            <div class="track-label">
+              VIDEO
+            </div>
+
+            <div class="track">
+
+              <div
+                class="clip"
+                id="videoClip">
+                Video
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="track-row">
+
+            <div class="track-label">
+              AUDIO
+            </div>
+
+            <div class="track audio-track">
+
+              <div
+                class="audio-clip"
+                id="audioClip">
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <!-- INSPECTOR -->
+    <aside class="inspector">
+
+      <div class="inspector-title">
+        Inspector
+      </div>
+
+      <div class="group">
+
+        <div class="group-title">
+          Transform
+        </div>
+
+        <div class="setting">
+          <span>Position</span>
+          <span class="setting-value">
+            0, 0
+          </span>
+        </div>
+
+        <div class="setting">
+          <span>Scale</span>
+          <span class="setting-value">
+            100%
+          </span>
+        </div>
+
+        <div class="setting">
+          <span>Rotation</span>
+          <span class="setting-value">
+            0°
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="group">
+
+        <div class="group-title">
+          Adjust
+        </div>
+
+        <div class="setting">
+          <span>Brightness</span>
+          <span class="setting-value">
+            0
+          </span>
+        </div>
+
+        <div class="setting">
+          <span>Contrast</span>
+          <span class="setting-value">
+            0
+          </span>
+        </div>
+
+        <div class="setting">
+          <span>Saturation</span>
+          <span class="setting-value">
+            0
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="group">
+
+        <div class="group-title">
+          Canvas
+        </div>
+
+        <div class="setting">
+          <span>Aspect Ratio</span>
+          <span class="setting-value">
+            9:16
+          </span>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </main>
+
+
+  <!-- MEDIA INPUT -->
+
+  <input
+    type="file"
+    id="mediaInput"
+    accept="video/*,image/*">
+
+  </div>
+  <script>
+/* ===============================
+   NINEX STUDIO — CORE ENGINE
+================================ */
+
+const mediaInput = document.getElementById("mediaInput");
+const importButton = document.getElementById("importButton");
+
+const videoPlayer = document.getElementById("videoPlayer");
+const imagePreview = document.getElementById("imagePreview");
+const emptyState = document.getElementById("emptyState");
+
+const playButton = document.getElementById("playButton");
+const previousBtn = document.getElementById("previousBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const timeDisplay = document.getElementById("timeDisplay");
+const videoClip = document.getElementById("videoClip");
+
+let currentFile = null;
+let currentObjectURL = null;
+
+
+/* ===============================
+   IMPORT MEDIA
+================================ */
+
+importButton.addEventListener("click", () => {
+    mediaInput.click();
+});
+
+
+mediaInput.addEventListener("change", (event) => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    currentFile = file;
+
+    if (currentObjectURL) {
+        URL.revokeObjectURL(currentObjectURL);
+    }
+
+    currentObjectURL = URL.createObjectURL(file);
+
+
+    /* VIDEO */
+
+    if (file.type.startsWith("video/")) {
+
+        imagePreview.style.display = "none";
+
+        videoPlayer.src = currentObjectURL;
+        videoPlayer.style.display = "block";
+
+        emptyState.style.display = "none";
+
+        videoPlayer.load();
+
+        videoClip.textContent = file.name;
+
+    }
+
+
+    /* IMAGE */
+
+    else if (file.type.startsWith("image/")) {
+
+        videoPlayer.pause();
+        videoPlayer.removeAttribute("src");
+        videoPlayer.load();
+
+        videoPlayer.style.display = "none";
+
+        imagePreview.src = currentObjectURL;
+        imagePreview.style.display = "block";
+
+        emptyState.style.display = "none";
+
+        videoClip.textContent = file.name;
+
+    }
+
+});
+
+
+/* ===============================
+   PLAY / PAUSE
+================================ */
+
+playButton.addEventListener("click", () => {
+
+    if (!videoPlayer.src) return;
+
+    if (videoPlayer.paused) {
+
+        videoPlayer.play()
+            .then(() => {
+                playButton.textContent = "❚❚";
+            })
+            .catch(() => {});
+
+    } else {
+
+        videoPlayer.pause();
+
+        playButton.textContent = "▶";
+
+    }
+
+});
+
+
+/* ===============================
+   VIDEO EVENTS
+================================ */
+
+videoPlayer.addEventListener("play", () => {
+    playButton.textContent = "❚❚";
+});
+
+videoPlayer.addEventListener("pause", () => {
+    playButton.textContent = "▶";
+});
+
+
+videoPlayer.addEventListener("timeupdate", () => {
+
+    const current = formatTime(
+        videoPlayer.currentTime
+    );
+
+    const duration = formatTime(
+        videoPlayer.duration
+    );
+
+    timeDisplay.textContent =
+        current + " / " + duration;
+
+});
+
+
+videoPlayer.addEventListener("loadedmetadata", () => {
+
+    const duration =
+        videoPlayer.duration || 0;
+
+    timeDisplay.textContent =
+        "00:00 / " + formatTime(duration);
+
+});
+
+
+videoPlayer.addEventListener("ended", () => {
+    playButton.textContent = "▶";
+});
+
+
+/* ===============================
+   SKIP BACKWARD
+================================ */
+
+previousBtn.addEventListener("click", () => {
+
+    if (!videoPlayer.src) return;
+
+    videoPlayer.currentTime =
+        Math.max(
+            0,
+            videoPlayer.currentTime - 5
+        );
+
+});
+
+
+/* ===============================
+   SKIP FORWARD
+================================ */
+
+nextBtn.addEventListener("click", () => {
+
+    if (!videoPlayer.src) return;
+
+    videoPlayer.currentTime =
+        Math.min(
+            videoPlayer.duration || 0,
+            videoPlayer.currentTime + 5
+        );
+
+});
+
+
+/* ===============================
+   TIME FORMAT
+================================ */
+
+function formatTime(seconds) {
+
+    if (
+        !seconds ||
+        !Number.isFinite(seconds)
+    ) {
+        return "00:00";
+    }
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        Math.floor(seconds % 60);
+
+    return (
+        String(minutes).padStart(2, "0")
+        +
+        ":"
+        +
+        String(secs).padStart(2, "0")
+    );
+
+}
+
+
+/* ===============================
+   TOOL SELECTION
+================================ */
+
+const tools =
+    document.querySelectorAll(".tool");
+
+tools.forEach(tool => {
+
+    tool.addEventListener("click", () => {
+
+        tools.forEach(item => {
+            item.classList.remove("active");
+        });
+
+        tool.classList.add("active");
+
+        const selectedTool =
+            tool.dataset.tool;
+
+        handleTool(selectedTool);
+
+    });
+
+});
+
+
+function handleTool(tool) {
+
+    switch (tool) {
+
+        case "media":
+            mediaInput.click();
+            break;
+
+        case "text":
+            showMessage(
+                "Text tool selected"
+            );
+            break;
+
+        case "audio":
+            showMessage(
+                "Audio tool selected"
+            );
+            break;
+
+        case "effects":
+            showMessage(
+                "Effects tool selected"
+            );
+            break;
+
+        case "filters":
+            showMessage(
+                "Filters tool selected"
+            );
+            break;
+
+        case "transition":
+            showMessage(
+                "Transition tool selected"
+            );
+            break;
+
+        case "speed":
+            showMessage(
+                "Speed tool selected"
+            );
+            break;
+
+        case "crop":
+            showMessage(
+                "Crop tool selected"
+            );
+            break;
+
+    }
+
+}
+
+
+/* ===============================
+   SIMPLE MESSAGE
+================================ */
+
+function showMessage(message) {
+
+    console.log(
+        "Ninex Studio:",
+        message
+    );
+
+}
+
+
+/* ===============================
+   UNDO / REDO FOUNDATION
+================================ */
+
+const undoBtn =
+    document.getElementById("undoBtn");
+
+const redoBtn =
+    document.getElementById("redoBtn");
+
+let history = [];
+let historyIndex = -1;
+
+
+undoBtn.addEventListener("click", () => {
+
+    if (historyIndex > 0) {
+
+        historyIndex--;
+
+        console.log(
+            "Undo:",
+            history[historyIndex]
+        );
+
+    }
+
+});
+
+
+redoBtn.addEventListener("click", () => {
+
+    if (
+        historyIndex <
+        history.length - 1
+    ) {
+
+        historyIndex++;
+
+        console.log(
+            "Redo:",
+            history[historyIndex]
+        );
+
+    }
+
+});
+
+
+/* ===============================
+   EXPORT BUTTON
+================================ */
+
+const exportBtn =
+    document.getElementById("exportBtn");
+
+exportBtn.addEventListener("click", () => {
+
+    if (!currentFile) {
+
+        alert(
+            "Please import a video first."
+        );
+
+        return;
+
+    }
+
+    alert(
+        "Ninex Studio export engine will be connected to the Android video renderer."
+    );
+
+});
+
+
+/* ===============================
+   CLEANUP
+================================ */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (currentObjectURL) {
+
+            URL.revokeObjectURL(
+                currentObjectURL
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
